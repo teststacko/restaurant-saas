@@ -1,3 +1,6 @@
+const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+  ? ""
+  : "https://restaurant-saas-api-di0a.onrender.com";
 let CURRENT_USER = null;
 const $ = s => document.querySelector(s);
 let APP_CURRENCY = localStorage.getItem("app_currency") || "₹";
@@ -245,16 +248,17 @@ async function api(url, options = {}) {
     headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(options.body);
   }
-  const res = await fetch(url, { ...options, headers: { ...headers, ...(options.headers || {}) } });
+  const fullUrl = url.startsWith("http") ? url : `${API_BASE}${url}`;
+  const res = await fetch(fullUrl, {
+    ...options,
+    credentials: "include",
+    headers: { ...headers, ...(options.headers || {}) }
+  });
   if (res.status === 401 && !url.includes("/api/auth/")) {
     CURRENT_USER = null;
     renderAuthGate();
     throw new Error("Session expired. Please log in.");
   }
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.detail || "An error occurred");
-  return data;
-}
 
 function toast(msg) {
   const t = document.getElementById("toast");
@@ -844,7 +848,11 @@ function form(t, row = null) {
       const formData = new FormData();
       formData.append("file", fileInput.files[0]);
       try {
-        const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
+        const uploadRes = await fetch(`${API_BASE}/api/upload`, {
+  method: "POST",
+  body: formData,
+  credentials: "include"
+});
         if (!uploadRes.ok) throw new Error("Upload failed. Allowed formats: JPG, PNG, PDF, TXT, CSV");
         const uploadData = await uploadRes.json();
         const hiddenInput = document.getElementById("f_bill") || document.getElementById("f_bill_photo");
