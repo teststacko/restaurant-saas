@@ -120,18 +120,15 @@ def logout(response: Response, session_id: str = Cookie(None)):
             conn.execute("DELETE FROM sessions WHERE token_hash = %s", (token_hash,))
     
     # Explicitly clear the cookie
+    is_prod = os.environ.get("COOKIE_SECURE", "").lower() == "true" or os.environ.get("APP_ENV", "") == "production"
     response.delete_cookie(
         key="session_id",
         path="/",
         httponly=True,
-        samesite="lax"
+        samesite="none" if is_prod else "lax",
+        secure=True if is_prod else False
     )
     return {"ok": True}
-
-
-
-
-
 
 
 @app.get("/api/schema")
@@ -242,20 +239,42 @@ def get_member(conn, u, user_id):
 @app.post("/api/auth/login")
 def login(d: dict, response: Response):
     username, password = (d.get("username") or "").strip(), (d.get("password") or "").strip()
-    if not username or not password: raise HTTPException(422, "Username and password required")
+    if not username or not password:
+        raise HTTPException(422, "Username and password required")
     with platform_tx(read_only=False) as conn:
         user = conn.execute("""SELECT id, username, password_hash, role, restaurant_id, is_active, must_set_password,
                 coalesce(allowed_sections, '["*"]'::jsonb) AS allowed_sections, allowed_tiles FROM users WHERE username = %s""", (username,)).fetchone()
-        if not user or not user["password_hash"] or not verify_pw(password, user["password_hash"]): raise HTTPException(401, "Invalid username or password")
-        if not user["is_active"]: raise HTTPException(403, "This account is deactivated. Please contact the owner.")
+        if not user or not user["password_hash"] or not verify_pw(password, user["password_hash"]):
+            raise HTTPException(401, "Invalid username or password")
+        if not user["is_active"]:
+            raise HTTPException(403, "This account is deactivated. Please contact the owner.")
         raw = secrets.token_urlsafe(32)
         conn.execute("INSERT INTO sessions (user_id, token_hash, expires_at) VALUES (%s, %s, %s)", (user["id"], hash_session_token(raw), dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=7)))
         conn.execute("UPDATE users SET last_login_at = now() WHERE id = %s", (user["id"],))
-        if user["restaurant_id"]: audit(conn, user["restaurant_id"], user, "login", None, "signed in")
-        response.set_cookie("session_id", raw, httponly=True, samesite="lax", secure=os.environ.get("COOKIE_SECURE", "").lower() == "true", max_age=7 * 86400)
-        return {"ok": True, "user": {"id": str(user["id"]), "username": user["username"], "role": user["role"], "restaurant_id": str(user["restaurant_id"]) if user["restaurant_id"] else None,
-                "allowed_sections": jl(user["allowed_sections"]), "allowed_tiles": jl(user["allowed_tiles"]), "must_set_password": user["must_set_password"]}}
-
+        if user["restaurant_id"]:
+            audit(conn, user["restaurant_id"], user, "login", None, "signed in")
+        
+        is_prod = os.environ.get("COOKIE_SECURE", "").lower() == "true" or os.environ.get("APP_ENV", "") == "production"
+        response.set_cookie(
+            "session_id",
+            raw,
+            httponly=True,
+            samesite="none" if is_prod else "lax",
+            secure=True if is_prod else False,
+            max_age=7 * 86400
+        )
+        return {
+            "ok": True,
+            "user": {
+                "id": str(user["id"]),
+                "username": user["username"],
+                "role": user["role"],
+                "restaurant_id": str(user["restaurant_id"]) if user["restaurant_id"] else None,
+                "allowed_sections": jl(user["allowed_sections"]),
+                "allowed_tiles": jl(user["allowed_tiles"]),
+                "must_set_password": user["must_set_password"]
+            }
+        }
 @app.get("/api/auth/me")
 def me(session_id: str = Cookie(None)):
     if not session_id: return {"authenticated": False, "user": None}
