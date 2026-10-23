@@ -1,0 +1,386 @@
+{
+ "sales": {
+  "title": "Sales",
+  "icon": "💰",
+  "f": [
+   {
+    "n": "day",
+    "l": "Date",
+    "t": "date",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "item",
+    "l": "Item",
+    "t": "text",
+    "o": null,
+    "r": false
+   },
+   {
+    "n": "qty",
+    "l": "Qty",
+    "t": "number",
+    "o": null,
+    "r": false
+   },
+   {
+    "n": "amount",
+    "l": "Amount (₹)",
+    "t": "number",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "method",
+    "l": "Payment",
+    "t": "select",
+    "o": [
+     "cash",
+     "upi",
+     "card",
+     "delivery"
+    ],
+    "r": false
+   },
+   {
+    "n": "channel",
+    "l": "Channel",
+    "t": "select",
+    "o": [
+     "dine-in",
+     "takeaway",
+     "delivery"
+    ],
+    "r": false
+   },
+   {
+    "n": "ref",
+    "l": "Bill no",
+    "t": "text",
+    "o": null,
+    "r": false
+   }
+  ]
+ },
+ "purchases": {
+  "title": "Purchases",
+  "icon": "🛒",
+  "f": [
+   {
+    "n": "day",
+    "l": "Date",
+    "t": "date",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "supplier",
+    "l": "Supplier",
+    "t": "text",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "item",
+    "l": "Item",
+    "t": "text",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "unit",
+    "l": "Unit",
+    "t": "select",
+    "o": [
+     "kg",
+     "g",
+     "l",
+     "ml",
+     "pcs",
+     "pack"
+    ],
+    "r": false
+   },
+   {
+    "n": "qty",
+    "l": "Quantity",
+    "t": "number",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "unit_price",
+    "l": "Unit price (₹)",
+    "t": "number",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "paid",
+    "l": "Paid so far (₹)",
+    "t": "number",
+    "o": null,
+    "r": false
+   },
+   {
+    "n": "bill",
+    "l": "Bill photo",
+    "t": "image",
+    "o": null,
+    "r": false
+   }
+  ]
+ },
+ "expenses": {
+  "title": "Expenses",
+  "icon": "💸",
+  "f": [
+   {
+    "n": "day",
+    "l": "Date",
+    "t": "date",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "category",
+    "l": "Category",
+    "t": "select",
+    "o": [
+     "Gas",
+     "Electricity",
+     "Water",
+     "Rent",
+     "Salary",
+     "Repairs",
+     "Packaging",
+     "Cleaning",
+     "Other"
+    ],
+    "r": 1
+   },
+   {
+    "n": "amount",
+    "l": "Amount (₹)",
+    "t": "number",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "note",
+    "l": "Note",
+    "t": "text",
+    "o": null,
+    "r": false
+   },
+   {
+    "n": "bill",
+    "l": "Bill photo",
+    "t": "image",
+    "o": null,
+    "r": false
+   }
+  ]
+ },
+ "wastage": {
+  "title": "Wastage",
+  "icon": "🗑️",
+  "f": [
+   {
+    "n": "day",
+    "l": "Date",
+    "t": "date",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "item",
+    "l": "Ingredient / dish",
+    "t": "text",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "qty",
+    "l": "Quantity",
+    "t": "number",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "unit_cost",
+    "l": "Cost per unit (₹)",
+    "t": "number",
+    "o": null,
+    "r": false
+   },
+   {
+    "n": "reason",
+    "l": "Reason",
+    "t": "select",
+    "o": [
+     "Spoiled",
+     "Spilled / damaged",
+     "Over-prepared",
+     "Returned",
+     "Expired"
+    ],
+    "r": 1
+   }
+  ]
+ },
+ "inventory": {
+  "title": "Inventory",
+  "icon": "📦",
+  "f": [
+   {
+    "n": "name",
+    "l": "Ingredient",
+    "t": "text",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "unit",
+    "l": "Unit",
+    "t": "select",
+    "o": [
+     "kg",
+     "g",
+     "l",
+     "ml",
+     "pcs",
+     "pack"
+    ],
+    "r": false
+   },
+   {
+    "n": "on_hand",
+    "l": "On hand",
+    "t": "number",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "low_at",
+    "l": "Low-stock alert at",
+    "t": "number",
+    "o": null,
+    "r": false
+   }
+  ]
+ },
+ "staff": {
+  "title": "Staff",
+  "icon": "👥",
+  "f": [
+   {
+    "n": "name",
+    "l": "Name",
+    "t": "text",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "role",
+    "l": "Role",
+    "t": "select",
+    "o": [
+     "Owner",
+     "Manager",
+     "Cashier",
+     "Chef",
+     "Waiter",
+     "Helper"
+    ],
+    "r": 1
+   },
+   {
+    "n": "salary",
+    "l": "Monthly salary (₹)",
+    "t": "number",
+    "o": null,
+    "r": false
+   },
+   {
+    "n": "phone",
+    "l": "Phone",
+    "t": "text",
+    "o": null,
+    "r": false
+   }
+  ]
+ },
+ "feedback": {
+  "title": "Feedback",
+  "icon": "⭐",
+  "f": [
+   {
+    "n": "day",
+    "l": "Date",
+    "t": "date",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "rating",
+    "l": "Rating (1-5)",
+    "t": "number",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "comment",
+    "l": "Comment",
+    "t": "text",
+    "o": null,
+    "r": false
+   },
+   {
+    "n": "status",
+    "l": "Status",
+    "t": "select",
+    "o": [
+     "open",
+     "resolved"
+    ],
+    "r": false
+   }
+  ]
+ },
+ "closings": {
+  "title": "Cash Closing",
+  "icon": "🔒",
+  "f": [
+   {
+    "n": "day",
+    "l": "Date",
+    "t": "date",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "expected",
+    "l": "Expected cash (₹), auto if blank",
+    "t": "number",
+    "o": null,
+    "r": false
+   },
+   {
+    "n": "actual",
+    "l": "Cash counted (₹)",
+    "t": "number",
+    "o": null,
+    "r": 1
+   },
+   {
+    "n": "note",
+    "l": "Note",
+    "t": "text",
+    "o": null,
+    "r": false
+   }
+  ]
+ }
+}

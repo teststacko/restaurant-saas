@@ -1,0 +1,22 @@
+name: restops
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: restops_admin
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?run scripts/init-env.ps1 first}
+      POSTGRES_DB: restops
+      APP_OWNER_PASSWORD: ${APP_OWNER_PASSWORD:?run scripts/init-env.ps1 first}
+      APP_USER_PASSWORD: ${APP_USER_PASSWORD:?run scripts/init-env.ps1 first}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes:
+      - restops_pgdata:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U restops_admin -d restops"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  restops_pgdata:
