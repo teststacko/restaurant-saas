@@ -259,6 +259,18 @@ async function api(url, options = {}) {
     renderAuthGate();
     throw new Error("Session expired. Please log in.");
   }
+  if (!res.ok) {
+    let errDetail = "Request failed";
+    try {
+      const errJson = await res.json();
+      errDetail = errJson.detail || errJson.message || errDetail;
+    } catch (_) {}
+    throw new Error(errDetail);
+  }
+  const contentType = res.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    return await res.json();
+  }
   return res;
 }
 function toast(msg) {
