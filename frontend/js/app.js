@@ -748,7 +748,8 @@ function formatCell(f, val) {
   if (f.t === "image" || f.n === "bill" || f.n === "bill_photo") {
     const ext = String(val).split(".").pop().toLowerCase();
     const isImg = ["jpg", "jpeg", "png"].includes(ext);
-    return `<a href="${esc(val)}" target="_blank" class="s" style="padding:2px 8px;font-size:12px;text-decoration:none">${isImg ? "🖼️ View Image" : "📄 View File"}</a>`;
+    const fileUrl = val ? (val.startsWith("http") ? val : `${API_BASE}${val.startsWith("/") ? "" : "/"}${val}`) : "";
+  return `<a href="${esc(fileUrl)}" target="_blank" rel="noopener noreferrer" class="s" style="padding:2px 8px;font-size:12px;text-decoration:none">${isImg ? "🖼️ View Image" : "📄 View File"}</a>`;
   }
 
   return esc(val);
@@ -796,13 +797,14 @@ function form(t, row = null) {
       const val = row ? row[field.n] : "";
 
       // 1. File Upload Field for Bill photo (handles f.t === "image" or f.n === "bill")
-   // 1. File Upload Field for Bill photo (handles f.t === "image" or f.n === "bill")
+// 1. File Upload Field for Bill photo (handles f.t === "image" or f.n === "bill")
       if (field.t === "image" || field.n === "bill" || field.n === "bill_photo") {
+        const fileUrl = val ? (val.startsWith("http") ? val : `${API_BASE}${val.startsWith("/") ? "" : "/"}${val}`) : "";
         return '<label>' + esc(field.l) + ' ' + (field.r ? "*" : "") + '</label>' +
           '<input type="file" id="fi_' + field.n + '" accept=".jpg,.jpeg,.png,.pdf,.txt,.csv" style="margin-bottom:6px">' +
           '<input type="hidden" id="f_' + field.n + '" name="' + field.n + '" value="' + esc(val ?? '') + '">' +
           '<div id="preview_' + field.n + '" style="margin-bottom:12px;font-size:13px">' +
-            (val ? '<a href="' + esc(val) + '" target="_blank" style="color:var(--ac);text-decoration:underline">📄 View Current File</a>' : '<span class="mu">No file attached</span>') +
+            (val ? '<a href="' + esc(fileUrl) + '" target="_blank" rel="noopener noreferrer" style="color:var(--ac);text-decoration:underline">📄 View Current File</a>' : '<span class="mu">No file attached</span>') +
           '</div>';
       }
 
