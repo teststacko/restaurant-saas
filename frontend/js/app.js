@@ -259,7 +259,8 @@ async function api(url, options = {}) {
     renderAuthGate();
     throw new Error("Session expired. Please log in.");
   }
-
+  return res;
+}
 function toast(msg) {
   const t = document.getElementById("toast");
   if (!t) return;
